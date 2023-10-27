@@ -1,9 +1,9 @@
 <template>
     <div class="login-page">
         <div class="login-card">
-            
+
             <div class="text-center">
-                <img src="../assets/image/lock.png" class="login-card__icon" alt="">
+                <img src="/img/lock.png" class="login-card__icon" alt="">
                 <h2>User Login</h2>
             </div>
 
@@ -11,7 +11,7 @@
             <form action="#" @submit.prevent="handleSubmit">
                 <!--Email-->
                 <label class="block">Email</label>
-                <input type="email" class="w-100" 
+                <input type="email" class="w-100"
                   placeholder="Enter your email"
                   v-model="formData.email"
                   ref="email"
@@ -19,15 +19,16 @@
 
                 <!--Password-->
                 <label class="block mt-3">Password</label>
-                <input type="password" class="w-100" 
+                <input type="password" class="w-100"
                   placeholder="Enter your password"
-                  v-model="formData.password" 
+                  v-model="formData.password"
                   ref="password"
                   required>
 
                 <!--submit btn-->
-                <p class="text-center" v-if="loggingIn">Loggin in.....</p>
-                <button type="submit" class="w-100 mt-3" v-else>Login</button>
+                <TheButton :block="true" :loading="loggingIn" class="mt-3">
+                    Login
+                </TheButton>
 
                 <div class="d-flex jc-between mt-3">
                     <div>
@@ -47,6 +48,7 @@
 
 <script>
 import axios from 'axios'
+import TheButton from '../components/TheButton.vue'
 export default {
   data: () => ({
     formData: {
@@ -81,7 +83,7 @@ export default {
         });
 
         this.$refs.password.focus();
-        
+
         return;
       }
 
@@ -95,10 +97,10 @@ export default {
           message: res.data.message
         });
       }).catch(err => {
-        console.log(err.response.data);
+        // console.log(err.response.data);
         let errorMessage = 'Something went wrong';
         if(err.response){
-          errorMessage = err.response.data.message; 
+          errorMessage = err.response.data.message;
         }
 
         this.$eventBus.emit('toast',{
@@ -110,12 +112,12 @@ export default {
         this.loggingIn = false;
       })
       // console.log(this.formData)
-      
+
 
     }
   },
   components: {
- 
+    TheButton
   }
 }
 </script>
@@ -173,12 +175,12 @@ export default {
   text-align: center;
 }
 
-button{
+/* button{
     background-color: #000 !important;
     color: #fff;
     padding: 10px 0;
     cursor: pointer;
-}
+} */
 
 @keyframes showhide {
   0% {
