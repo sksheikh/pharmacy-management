@@ -1,22 +1,22 @@
 <template>
-    <login></login>
-  
+    <router-view></router-view>
+
     <!--toast component-->
     <!-- <div class="toasts"> -->
       <TransitionGroup name="slide-left" tag="div" class="toasts">
-        <TheToast 
+        <TheToast
           v-for="(toast,i) in toasts" :key="i"
-          :toastType="toast.type" 
+          :toastType="toast.type"
           :toastMessage="toast.message">
         </TheToast>
     </TransitionGroup>
-  
+
     <!-- </div> -->
-    
+
   </template>
-  
+
   <script>
-  import Login from '../components/Login.vue';
+  import Login from '../pages/Login.vue';
   import TheToast from '../components/TheToast.vue';
   export default{
     data: () =>({
@@ -36,7 +36,7 @@
         console.log(data);
         this.toasts.push(data);
         this.removeOneToast();
-      
+
       } )
     },
     methods: {
@@ -52,7 +52,7 @@
     }
   }
   </script>
-  
+
   <style>
   .slide-left-enter-active,
   .slide-left-leave-active {

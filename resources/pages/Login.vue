@@ -51,6 +51,7 @@ import axios from 'axios'
 import TheButton from '../components/TheButton.vue'
 export default {
   data: () => ({
+
     formData: {
       email: '',
       password: '',
@@ -61,7 +62,7 @@ export default {
   }),
   methods : {
     handleSubmit(){
-      // console.log('handling form ....');
+    //   console.log(this.formData);
       // console.log(this.formData);
       if(!this.formData.email){
         // alert('Email can\'t be empty!');
@@ -91,11 +92,14 @@ export default {
       //TODO: Call API
       axios.post("http://127.0.0.1:8000/api/login",this.formData)
       .then(res =>{
-        // console.log(res.data);
+        // console.log(res.data.data.token);
         this.$eventBus.emit('toast',{
           type: 'Success',
           message: res.data.message
         });
+
+        localStorage.setItem("accessToken", res.data.data.token)
+        this.$router.push('/dashboard');
       }).catch(err => {
         // console.log(err.response.data);
         let errorMessage = 'Something went wrong';
