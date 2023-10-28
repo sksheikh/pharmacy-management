@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import mitt from 'mitt'
-import router from '../router'
+import router from './router'
 import App from './App.vue'
 
 

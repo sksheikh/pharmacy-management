@@ -16,8 +16,8 @@
   </template>
 
   <script>
-  import Login from '../pages/Login.vue';
-  import TheToast from '../components/TheToast.vue';
+  import Login from './pages/Login.vue';
+  import TheToast from './components/TheToast.vue';
   export default{
     data: () =>({
       toasts: [
