@@ -2,13 +2,15 @@
     <!--dashboard-->
     <div class="dashboard">
         <!--dashboard__left-->
-        <div class="dashboard__left"></div>
+        <div class="dashboard__left">
+            <TheSidebar></TheSidebar>
+        </div>
 
         <!--dashboard__right-->
         <div class="dashboard__right">
             <!--dashboard__top-->
             <div class="dashboard__top"></div>
-            
+
             <!--dashboard__top-->
             <div class="dashboard__main"></div>
         </div>
@@ -16,7 +18,11 @@
 </template>
 
 <script>
+    import TheSidebar from '../components/TheSidebar.vue';
 export default {
+    components: {
+        TheSidebar
+    }
 
 }
 </script>
