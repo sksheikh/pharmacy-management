@@ -9,7 +9,9 @@
         <!--dashboard__right-->
         <div class="dashboard__right">
             <!--dashboard__top-->
-            <div class="dashboard__top"></div>
+            <div class="dashboard__top">
+                <TheHeader></TheHeader>
+            </div>
 
             <!--dashboard__top-->
             <div class="dashboard__main"></div>
@@ -19,9 +21,11 @@
 
 <script>
     import TheSidebar from '../components/TheSidebar.vue';
+    import TheHeader from '../components/TheHeader.vue';
 export default {
     components: {
-        TheSidebar
+        TheSidebar,
+        TheHeader
     }
 
 }
