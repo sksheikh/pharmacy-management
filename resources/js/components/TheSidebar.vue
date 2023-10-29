@@ -11,11 +11,11 @@
         <div class="sidebar__bottom">
             <!--sidebar__nav-->
             <div class="sidebar__nav">
-                <a href="/dashboard/overview">Overview</a>
-                <a href="/dashboard/drugs">Drugs</a>
-                <a href="/dashboard/vendors">Vendors</a>
-                <a href="/dashboard/selling-history">Selling History</a>
-                <a href="/dashboard/settings">Settings</a>
+                <router-link to="/dashboard/overview">Overview</router-link>
+                <router-link to="/dashboard/drugs">Drugs</router-link>
+                <router-link to="/dashboard/vendors">Vendors</router-link>
+                <router-link to="/dashboard/selling-history">Selling History</router-link>
+                <router-link to="/dashboard/settings">Settings</router-link>
             </div>
         </div>
     </div>
