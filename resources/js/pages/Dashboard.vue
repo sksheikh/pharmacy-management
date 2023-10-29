@@ -14,7 +14,9 @@
             </div>
 
             <!--dashboard__top-->
-            <div class="dashboard__main"></div>
+            <div class="dashboard__main">
+                <router-view></router-view>
+            </div>
         </div>
     </div>
 </template>
