@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\LoginController;
+use App\Http\Controllers\API\VendorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,3 +25,9 @@ Route::controller(LoginController::class)->group(function(){
     Route::post('/login','store')->name('login.store');
 });
 
+//____________VendorController___________
+Route::controller(VendorController::class)->group(function(){
+    Route::get('/vendor','index')->name('vendor.index');
+    Route::post('/vendor','store')->name('vendor.store');
+
+});
