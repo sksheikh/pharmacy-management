@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex jc-between ai-center">
         <h2>All Vendors</h2>
-        <TheButtonVue>Add new</TheButtonVue>
+        <TheButton @click="addModal = true">Add new</TheButton>
     </div>
 
     <!--Table-->
@@ -27,13 +27,23 @@
             </tr>
         </tbody>
     </table>
+
+    <!--modal-->
+    <TheModal v-model="addModal" heading="Add new vendor">
+        <h2>Lorem ipsum dolor sit amet.</h2>
+    </TheModal>
 </template>
 
 <script>
-import TheButtonVue from '../../components/TheButton.vue'
+import TheButton from '../../components/TheButton.vue'
+import TheModal from '../../components/TheModal.vue'
 export default {
+    data: () => ({
+        addModal: false
+    }),
     components: {
-        TheButtonVue
+        TheButton,
+        TheModal
     }
 }
 </script>
