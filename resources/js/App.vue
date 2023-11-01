@@ -33,7 +33,6 @@
     }),
     mounted(){
       this.$eventBus.on('toast', (data) => {
-        console.log(data);
         this.toasts.push(data);
         this.removeOneToast();
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Vendor;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class VendorController extends Controller
@@ -26,6 +27,7 @@ class VendorController extends Controller
 
     public function store(Request $request)
     {
+        // return $request->all();
         $validator = Validator::make($request->all(),[
             'name' => 'required',
             'description' => 'required'
@@ -49,6 +51,20 @@ class VendorController extends Controller
 
             return response($response,200);
         }
+
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        $vendor = Vendor::findOrFail($id);
+        $vendor->delete();
+
+        $response = [
+            'success' => true,
+            'message' => 'Vendor deleted succefully'
+        ];
+
+        return response($response,200);
 
     }
 }

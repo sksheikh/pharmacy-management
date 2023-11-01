@@ -16,18 +16,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return 'hello';
-// });
-
 Route::controller(LoginController::class)->group(function(){
     Route::get('/user','index')->name('login.index');
     Route::post('/login','store')->name('login.store');
 });
 
-//____________VendorController___________
-Route::controller(VendorController::class)->group(function(){
-    Route::get('/vendor','index')->name('vendor.index');
-    Route::post('/vendor','store')->name('vendor.store');
+Route::middleware('auth:sanctum')->group(function(){
+    
+    //____________VendorController___________
+    Route::controller(VendorController::class)->group(function(){
+        Route::get('/vendor','index')->name('vendor.index');
+        Route::post('/vendor','store')->name('vendor.store');
+        Route::delete('/vendor/delete/{id}','destroy')->name('vendor.destroy');
 
+    
+    });
 });
+

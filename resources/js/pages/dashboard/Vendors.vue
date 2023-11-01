@@ -4,8 +4,10 @@
         <TheButton @click="addModal = true">Add new</TheButton>
     </div>
 
+    <!--Loading-->
+    <div class="text-center" v-if="gettingVendors">Loading...</div>
     <!--Table-->
-    <table class="mt-4">
+    <table class="mt-4" v-else>
         <!--thead-->
         <thead>
             <tr>
@@ -22,13 +24,15 @@
                 <td>{{ vendor.description }}</td>
                 <td>
                     <img src="/img/edit.png" alt="" class="action-icon">
-                    <img src="/img/trash.png" alt="" class="action-icon action-icon--delete ml-3">
+                    <img src="/img/trash.png" alt="" 
+                        class="action-icon action-icon--delete ml-3"
+                        @click="selectedVendor = vendor, deletModal = true">
                 </td>
             </tr>
         </tbody>
     </table>
 
-    <!--modal-->
+    <!--add new modal-->
     <TheModal v-model="addModal" heading="Add new vendor">
         <form @submit.prevent="addNew">
             <!--vendor name-->
@@ -57,6 +61,13 @@
             </TheButton>
         </form>
     </TheModal>
+
+    <!--delete modal-->
+    <TheModal v-model="deletModal" heading="Are your sure to delete?">
+        <h3 class="mb-4">Confirm if you want to delete!</h3>
+        <TheButton class="mr-2" @click="deleteVendor" :loading="deleting">Yes</TheButton>
+        <TheButton class="ml-2" color="gray" @click="deletModal = false">No</TheButton>
+    </TheModal>
 </template>
 
 <script>
@@ -66,12 +77,16 @@ import TheModal from '../../components/TheModal.vue'
 export default {
     data: () => ({
         addModal: false,
+        deletModal:false,
         addVendor: {
             name: '',
             description: ''
         },
+        selectedVendor: {},
         addLoading: false,
-        vendors: []
+        vendors: [],
+        gettingVendors: false,
+        deleting:false
 
     }),
     components: {
@@ -79,12 +94,14 @@ export default {
         TheModal
     },
     mounted() {
-        this.getVendors();
+        this.getAllVendors();
     },
     methods: {
+        //_______reset input data 
         resetData(){
             this.addVendor = { name: '', description: ''};
         },
+        //_______add new vendor 
         addNew(){
             // console.log(this.addVendor)
 
@@ -115,7 +132,13 @@ export default {
             this.addLoading = true;
             // //TODO: Call API
             axios.post("http://127.0.0.1:8000/api/vendor",
-                this.addVendor)
+                this.addVendor,
+                {
+                    headers: {
+                        Authorization: localStorage.getItem("accessToken")
+                    }
+                }
+            )
             .then(res =>{
                 this.$eventBus.emit('toast',{
                 type: 'Success',
@@ -124,6 +147,8 @@ export default {
 
                 this.addModal = false;
                 this.resetData();
+                this.getAllVendors();
+
 
                 // localStorage.setItem("accessToken", res.data.data.token)
                 // this.$router.push('/dashboard');
@@ -142,13 +167,19 @@ export default {
                 this.addLoading = false;
             })
         },
+        //_______get all vendors 
+        getAllVendors(){
+            this.gettingVendors = true;
 
-        getVendors(){
-            axios.get("http://127.0.0.1:8000/api/vendor")
+            axios.get("http://127.0.0.1:8000/api/vendor",
+            {
+                headers: {
+                    Authorization: localStorage.getItem("accessToken")
+                }
+
+            })
             .then(res =>{
-                // console.log(res);
                 this.vendors = res.data.data
-                // console.log(this.vendors);
 
             }).catch(err => {
                 let errorMessage = 'Something went wrong';
@@ -161,6 +192,46 @@ export default {
                 message: errorMessage
                 });
 
+            }).finally(()=>{
+                this.gettingVendors = false;
+            })
+        },
+
+        //_______delete vendor
+        deleteVendor(){
+            this.deleting = true;
+            axios.delete("http://127.0.0.1:8000/api/vendor/delete/"+this.selectedVendor.id,
+
+            {
+                headers: {
+                    Authorization: localStorage.getItem("accessToken")
+                }
+
+            })
+            .then(res =>{
+                this.$eventBus.emit('toast',{
+                    type: 'Success',
+                    message: res.data.message
+                });
+
+                
+                this.getAllVendors();
+                
+
+            }).catch(err => {
+                let errorMessage = 'Something went wrong';
+                if(err.response){
+                errorMessage = err.response.data.message;
+                }
+
+                this.$eventBus.emit('toast',{
+                type: 'Error',
+                message: errorMessage
+                });
+
+            }).finally(()=>{
+                this.deletModal = false;
+                this.deleting = false;
             })
         }
     }
