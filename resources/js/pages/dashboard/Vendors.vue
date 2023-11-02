@@ -24,7 +24,7 @@
                 <td>{{ vendor.description }}</td>
                 <td>
                     <img src="/img/edit.png" alt="" class="action-icon">
-                    <img src="/img/trash.png" alt="" 
+                    <img src="/img/trash.png" alt=""
                         class="action-icon action-icon--delete ml-3"
                         @click="selectedVendor = vendor, deletModal = true">
                 </td>
@@ -38,8 +38,8 @@
             <!--vendor name-->
             <div class="form-group">
                 <label class="block">Vendor Name</label>
-                <input type="text" 
-                    placeholder="Enter vendor name" 
+                <input type="text"
+                    placeholder="Enter vendor name"
                     class="mt-1 w-100"
                     v-model="addVendor.name"
                     ref="name" />
@@ -48,8 +48,8 @@
              <!--vendor description-->
              <div class="form-group mt-3">
                 <label class="block">Description</label>
-                <input type="text" 
-                placeholder="Write short description" 
+                <input type="text"
+                placeholder="Write short description"
                 class="mt-1 w-100"
                 v-model="addVendor.description"
                 ref="description" />
@@ -97,11 +97,11 @@ export default {
         this.getAllVendors();
     },
     methods: {
-        //_______reset input data 
+        //_______reset input data
         resetData(){
             this.addVendor = { name: '', description: ''};
         },
-        //_______add new vendor 
+        //_______add new vendor
         addNew(){
             // console.log(this.addVendor)
 
@@ -127,7 +127,7 @@ export default {
                 return;
             }
 
-     
+
 
             this.addLoading = true;
             // //TODO: Call API
@@ -167,17 +167,18 @@ export default {
                 this.addLoading = false;
             })
         },
-        //_______get all vendors 
+        //_______get all vendors
         getAllVendors(){
             this.gettingVendors = true;
 
-            axios.get("http://127.0.0.1:8000/api/vendor",
-            {
-                headers: {
-                    Authorization: localStorage.getItem("accessToken")
-                }
+            axios.get("http://127.0.0.1:8000/api/vendor"
+            // {
+            //     headers: {
+            //         Authorization: localStorage.getItem("accessToken")
+            //     }
 
-            })
+            // }
+            )
             .then(res =>{
                 this.vendors = res.data.data
 
@@ -214,9 +215,9 @@ export default {
                     message: res.data.message
                 });
 
-                
+
                 this.getAllVendors();
-                
+
 
             }).catch(err => {
                 let errorMessage = 'Something went wrong';
