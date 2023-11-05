@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::get('/vendor','index')->name('vendor.index');
         Route::post('/vendor','store')->name('vendor.store');
         Route::delete('/vendor/delete/{id}','destroy')->name('vendor.destroy');
+        Route::put('/vendor/{id}','update')->name('vendor.update');
 
     
     });
