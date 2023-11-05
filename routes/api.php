@@ -22,7 +22,6 @@ Route::controller(LoginController::class)->group(function(){
 });
 
 Route::middleware('auth:sanctum')->group(function(){
-    
     //____________VendorController___________
     Route::controller(VendorController::class)->group(function(){
         Route::get('/vendor','index')->name('vendor.index');
@@ -30,7 +29,7 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::delete('/vendor/delete/{id}','destroy')->name('vendor.destroy');
         Route::put('/vendor/{id}','update')->name('vendor.update');
 
-    
+
     });
 });
 
