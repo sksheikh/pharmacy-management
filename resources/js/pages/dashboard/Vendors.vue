@@ -23,7 +23,12 @@
                 <td>{{ vendor.name }}</td>
                 <td>{{ vendor.description }}</td>
                 <td>
-                    <img src="/img/edit.png" alt="" class="action-icon">
+
+                    <!--edit btn-->
+                    <img src="/img/edit.png" alt="" class="action-icon"
+                    @click="selectedVendor = vendor, editModal = true">
+                    
+                    <!--delete btn-->
                     <img src="/img/trash.png" alt=""
                         class="action-icon action-icon--delete ml-3"
                         @click="selectedVendor = vendor, deletModal = true">
@@ -62,6 +67,36 @@
         </form>
     </TheModal>
 
+     <!--edit modal-->
+     <TheModal v-model="editModal" heading="Edit vendor">
+        <form @submit.prevent="editVendor">
+            <!--vendor name-->
+            <div class="form-group">
+                <label class="block">Vendor Name</label>
+                <input type="text" 
+                    placeholder="Enter vendor name" 
+                    class="mt-1 w-100"
+                    v-model="selectedVendor.name"
+                    ref="name" />
+            </div>
+
+             <!--vendor description-->
+             <div class="form-group mt-3">
+                <label class="block">Description</label>
+                <input type="text" 
+                placeholder="Write short description" 
+                class="mt-1 w-100"
+                v-model="selectedVendor.description"
+                ref="description" />
+            </div>
+
+            <!--submit btn-->
+            <TheButton :loading="editLoading" class="w-100 mt-3">
+                Update changes
+            </TheButton>
+        </form>
+    </TheModal>
+
     <!--delete modal-->
     <TheModal v-model="deletModal" heading="Are your sure to delete?">
         <h3 class="mb-4">Confirm if you want to delete!</h3>
@@ -78,12 +113,14 @@ export default {
     data: () => ({
         addModal: false,
         deletModal:false,
+        editModal:false,
         addVendor: {
             name: '',
             description: ''
         },
         selectedVendor: {},
         addLoading: false,
+        editLoading:false,
         vendors: [],
         gettingVendors: false,
         deleting:false
@@ -101,6 +138,7 @@ export default {
         resetData(){
             this.addVendor = { name: '', description: ''};
         },
+        
         //_______add new vendor
         addNew(){
             // console.log(this.addVendor)
@@ -167,6 +205,7 @@ export default {
                 this.addLoading = false;
             })
         },
+
         //_______get all vendors
         getAllVendors(){
             this.gettingVendors = true;
@@ -234,7 +273,70 @@ export default {
                 this.deletModal = false;
                 this.deleting = false;
             })
+        },
+
+        //_______delete vendor
+        editVendor(){
+
+            if(!this.selectedVendor.name){
+                this.$eventBus.emit('toast',{
+                type: 'Error',
+                message: 'Name can\'t be empty!'
+                });
+
+                this.$refs.name.focus();
+
+                return;
+            }
+
+            if(!this.selectedVendor.description){
+                this.$eventBus.emit('toast',{
+                type: 'Error',
+                message: 'Description can\'t be empty!'
+                });
+
+                this.$refs.description.focus();
+
+                return;
+            }
+
+            this.editLoading = true;
+            axios.put("http://127.0.0.1:8000/api/vendor/"+this.selectedVendor.id,
+            this.selectedVendor,
+
+            {
+                headers: {
+                    Authorization: localStorage.getItem("accessToken")
+                }
+
+            })
+            .then(res =>{
+                this.$eventBus.emit('toast',{
+                    type: 'Success',
+                    message: res.data.message
+                });
+
+                
+
+            }).catch(err => {
+                let errorMessage = 'Something went wrong';
+                if(err.response){
+                errorMessage = err.response.data.message;
+                }
+
+                this.$eventBus.emit('toast',{
+                type: 'Error',
+                message: errorMessage
+                });
+
+            }).finally(()=>{
+                this.editModal = false;
+                this.editLoading = false;
+                this.resetData();
+                this.getAllVendors();
+            })
         }
+
     }
 }
 </script>

@@ -67,4 +67,23 @@ class VendorController extends Controller
         return response($response,200);
 
     }
+
+    public function update(Request $request, $id)
+    {
+        // return $request->all();
+        $vendor = Vendor::findOrFail($id);
+
+        $vendor->update([
+            'name' => $request->name,
+            'description' => $request->description
+        ]);
+
+        $response = [
+            'success' => true,
+            'message' => 'Vendor updated succefully'
+        ];
+
+        return response($response,200);
+
+    }
 }
