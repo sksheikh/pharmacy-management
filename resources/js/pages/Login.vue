@@ -15,7 +15,7 @@
                   placeholder="Enter your email"
                   v-model="formData.email"
                   ref="email"
-                  required>
+                  >
 
                 <!--Password-->
                 <label class="block mt-3">Password</label>
@@ -23,7 +23,7 @@
                   placeholder="Enter your password"
                   v-model="formData.password"
                   ref="password"
-                  required>
+                  >
 
                 <!--submit btn-->
                 <TheButton :block="true" :loading="loggingIn" class="mt-3">
@@ -47,8 +47,10 @@
 </template>
 
 <script>
-import axios from 'axios'
-import TheButton from '../components/TheButton.vue'
+import axios from 'axios';
+import TheButton from '../components/TheButton.vue';
+import { eventBus } from '../utils/eventBus';
+import { showErrorMessage, showSuccessMessage } from '../utils/function';
 export default {
   data: () => ({
 
@@ -62,60 +64,37 @@ export default {
   }),
   methods : {
     handleSubmit(){
-    //   console.log(this.formData);
-      // console.log(this.formData);
+
       if(!this.formData.email){
-        // alert('Email can\'t be empty!');
-        this.$eventBus.emit('toast',{
-          type: 'Error',
-          message: 'Email can\'t be empty!'
-        });
-
+        showErrorMessage('Email can\'t be empty!');
         this.$refs.email.focus();
+        return;
+      }
 
+      if(!this.formData.password){
+        showErrorMessage('Password can\'t be empty!');
+        this.$refs.email.focus();
         return;
       }
 
       if(this.formData.password.length < 6){
-        // alert('Password must be at least 6 character long!');
-        this.$eventBus.emit('toast',{
-          type: 'Error',
-          message: 'Password must be at least 6 character long!'
-        });
-
+        showErrorMessage('Password must be at least 6 character long!');
         this.$refs.password.focus();
-
         return;
       }
 
       this.loggingIn = true;
-      //TODO: Call API
       axios.post("http://127.0.0.1:8000/api/login",this.formData)
       .then(res =>{
-        // console.log(res.data.data.token);
-        this.$eventBus.emit('toast',{
-          type: 'Success',
-          message: res.data.message
-        });
-
-        localStorage.setItem("accessToken", res.data.data.token)
+        showSuccessMessage(res);
+        localStorage.setItem("accessToken", res.data.data.token);
         this.$router.push('/dashboard');
       }).catch(err => {
-        // console.log(err.response.data);
-        let errorMessage = 'Something went wrong';
-        if(err.response){
-          errorMessage = err.response.data.message;
-        }
-
-        this.$eventBus.emit('toast',{
-          type: 'Error',
-          message: errorMessage
-        });
+        showErrorMessage(err);
 
       }).finally(()=>{
         this.loggingIn = false;
       })
-      // console.log(this.formData)
 
 
     }

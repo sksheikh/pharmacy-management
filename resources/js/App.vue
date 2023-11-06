@@ -16,23 +16,14 @@
   </template>
 
   <script>
-  import Login from './pages/Login.vue';
   import TheToast from './components/TheToast.vue';
+  import { eventBus } from './utils/eventBus';
   export default{
     data: () =>({
-      toasts: [
-        // {
-        //   type: 'Success',
-        //   message: 'Successfully done'
-        // },
-        // {
-        //   type: 'Error',
-        //   message: 'Something went wrong'
-        // }
-      ]
+      toasts: []
     }),
     mounted(){
-      this.$eventBus.on('toast', (data) => {
+      eventBus.on('toast', (data) => {
         this.toasts.push(data);
         this.removeOneToast();
 
@@ -46,7 +37,6 @@
       }
     },
     components:{
-      Login,
       TheToast
     }
   }
