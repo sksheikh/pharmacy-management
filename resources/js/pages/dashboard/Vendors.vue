@@ -109,6 +109,9 @@
 import axios from 'axios'
 import TheButton from '../../components/TheButton.vue'
 import TheModal from '../../components/TheModal.vue'
+import { eventBus } from '../../utils/eventBus'
+import { showErrorMessage, showSuccessMessage } from '../../utils/function';
+
 export default {
     data: () => ({
         addModal: false,
@@ -141,34 +144,24 @@ export default {
         
         //_______add new vendor
         addNew(){
-            // console.log(this.addVendor)
+
+            //_________ check validation
 
             if(!this.addVendor.name){
-                this.$eventBus.emit('toast',{
-                type: 'Error',
-                message: 'Name can\'t be empty!'
-                });
-
+                showErrorMessage('Name can\'t be empty!');
                 this.$refs.name.focus();
-
                 return;
             }
 
             if(!this.addVendor.description){
-                this.$eventBus.emit('toast',{
-                type: 'Error',
-                message: 'Description can\'t be empty!'
-                });
-
+                showErrorMessage('Description can\'t be empty!');
                 this.$refs.description.focus();
-
                 return;
             }
 
 
 
             this.addLoading = true;
-            // //TODO: Call API
             axios.post("http://127.0.0.1:8000/api/vendor",
                 this.addVendor,
                 {
@@ -178,28 +171,13 @@ export default {
                 }
             )
             .then(res =>{
-                this.$eventBus.emit('toast',{
-                type: 'Success',
-                message: res.data.message
-                });
-
+                showSuccessMessage(res);
                 this.addModal = false;
                 this.resetData();
                 this.getAllVendors();
 
-
-                // localStorage.setItem("accessToken", res.data.data.token)
-                // this.$router.push('/dashboard');
             }).catch(err => {
-                let errorMessage = 'Something went wrong';
-                if(err.response){
-                errorMessage = err.response.data.message;
-                }
-
-                this.$eventBus.emit('toast',{
-                type: 'Error',
-                message: errorMessage
-                });
+                showErrorMessage(err);
 
             }).finally(()=>{
                 this.addLoading = false;
@@ -211,26 +189,12 @@ export default {
             this.gettingVendors = true;
 
             axios.get("http://127.0.0.1:8000/api/vendor"
-            // {
-            //     headers: {
-            //         Authorization: localStorage.getItem("accessToken")
-            //     }
-
-            // }
             )
             .then(res =>{
                 this.vendors = res.data.data
 
             }).catch(err => {
-                let errorMessage = 'Something went wrong';
-                if(err.response){
-                errorMessage = err.response.data.message;
-                }
-
-                this.$eventBus.emit('toast',{
-                type: 'Error',
-                message: errorMessage
-                });
+                showErrorMessage(err);
 
             }).finally(()=>{
                 this.gettingVendors = false;
@@ -249,25 +213,11 @@ export default {
 
             })
             .then(res =>{
-                this.$eventBus.emit('toast',{
-                    type: 'Success',
-                    message: res.data.message
-                });
-
-
+                showSuccessMessage(res);
                 this.getAllVendors();
 
-
             }).catch(err => {
-                let errorMessage = 'Something went wrong';
-                if(err.response){
-                errorMessage = err.response.data.message;
-                }
-
-                this.$eventBus.emit('toast',{
-                type: 'Error',
-                message: errorMessage
-                });
+                showErrorMessage(err);
 
             }).finally(()=>{
                 this.deletModal = false;
@@ -275,32 +225,25 @@ export default {
             })
         },
 
-        //_______delete vendor
+        //_______delete vendor method
         editVendor(){
-
+            //______validation
             if(!this.selectedVendor.name){
-                this.$eventBus.emit('toast',{
-                type: 'Error',
-                message: 'Name can\'t be empty!'
-                });
-
+                showErrorMessage('Name can\'t be empty!');
                 this.$refs.name.focus();
-
                 return;
             }
 
             if(!this.selectedVendor.description){
-                this.$eventBus.emit('toast',{
-                type: 'Error',
-                message: 'Description can\'t be empty!'
-                });
-
+                showErrorMessage('Description can\'t be empty!')
                 this.$refs.description.focus();
-
                 return;
             }
 
+            //______loader
             this.editLoading = true;
+
+            //_____Api call
             axios.put("http://127.0.0.1:8000/api/vendor/"+this.selectedVendor.id,
             this.selectedVendor,
 
@@ -311,28 +254,14 @@ export default {
 
             })
             .then(res =>{
-                this.$eventBus.emit('toast',{
-                    type: 'Success',
-                    message: res.data.message
-                });
-
-                
+                showSuccessMessage(res);
 
             }).catch(err => {
-                let errorMessage = 'Something went wrong';
-                if(err.response){
-                errorMessage = err.response.data.message;
-                }
-
-                this.$eventBus.emit('toast',{
-                type: 'Error',
-                message: errorMessage
-                });
+                showErrorMessage(err);
 
             }).finally(()=>{
                 this.editModal = false;
                 this.editLoading = false;
-                this.resetData();
                 this.getAllVendors();
             })
         }
