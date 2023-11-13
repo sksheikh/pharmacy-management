@@ -49,7 +49,6 @@
 <script>
 import axios from 'axios';
 import TheButton from '../components/TheButton.vue';
-import { eventBus } from '../utils/eventBus';
 import { showErrorMessage, showSuccessMessage } from '../utils/function';
 export default {
   data: () => ({
@@ -86,6 +85,7 @@ export default {
       this.loggingIn = true;
       axios.post("http://127.0.0.1:8000/api/login",this.formData)
       .then(res =>{
+        console.log(res);
         showSuccessMessage(res);
         localStorage.setItem("accessToken", res.data.data.token);
         this.$router.push('/dashboard');
